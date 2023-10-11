@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import socket
+import requests
+import time
+
+ip = 'he708888888.sn.mynetname.net'    #ip адрес который пингуется
+port = 23 #проверяет данный  порт
+d = 'route222 error'  #выводит для обезличивания
+TOKEN = "8888888mxKaskldfhasdjkfhsdjkahnfjkasfjnklafhjasw" #токен чата в телеге
+chat_id = "-888888888" #id телеграмм бота
+
+#функция проверяте открыт ли порт
+def scan_port(ip, port, d):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(1)
+    try:
+        sock.connect((ip, port))
+        print('Port', port, 'is open.')
+        return 42
+        sock.close()
+    except ConnectionRefusedError:
+        print('Port', port, 'is closed.')
+    except socket.timeout:
+        print('Timeout occurred while connecting to port', port)
+    except Exception as e:
+        print('An error occurred:', str(e))
+
+#функция отправляет сообщение в telegramm
+def f1(TOKEN, chat_id):
+    requests.get(f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id}&text={d}").json()
+
+#цикл выполняет 5 итерация чтобы обойти сетевые ошибки
+for attempt in range(5):
+    result = scan_port(ip, port, d) #вывод результата записан в положительный сценарий
+    time.sleep(2)
+    if result == 42:
+       print("good")
+       break
+else:
+    f1(TOKEN, chat_id)
+    print(d)        #если не было ни одного положительного ответа
